@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Тестовое задание</title>
+</head>
+<body>
+<style>
+    html, body {
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+    }
+
+    body {
+        background: #efefef;
+    }
+
+    .circle {
+        background: #444;
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        border-radius: 100px;
+    }
+
+    .circle-shadow {
+        background: #ddd;
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        border-radius: 100px;
+    }
+
+    .transition {
+        transition: all .3s;
+    }
+
+</style>
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script>
+    // Оптимизируйте и приведите код в порядок
+    $(document).ready(function () {
+        var body = $("body"),
+            circle;
+        for (var x = 0; x < body.width(); x += 60) {
+            for (var y = 0; y < body.height(); y += 60) {
+                //параметры круга
+                circle = {
+                    'data-x': x,
+                    'data-y': y,
+                    css: {
+                        top: y + "px",
+                        left: x + "px"
+                    }
+                };
+                //добавляем в документ круги
+                $('<div/>', circle).addClass('circle-shadow').appendTo(body);
+                $('<div/>', circle).addClass('circle').appendTo(body);
+
+            }
+        }
+
+        try {
+            $(window).on("mousemove", function (document) {
+                $(".circle").each(function (i) {
+                    //Сохраняем значения для текущего элемента
+                    var current = $(".circle:eq(" + i + ")"),
+                        widthCurrent = current.width() / 2,
+                        x0 = current.data("x"),
+                        y0 = current.data("y"),
+                        dx = document.clientX - x0 - widthCurrent,
+                        dy = document.clientY - y0 - widthCurrent;
+
+                    Math.sqrt(dx * dx + dy * dy) < current.width() ? (function () {
+                            if (current.hasClass("transition")) {
+                                current.removeClass("transition");
+                                current.css({
+                                    left: x0 - dx + "px",
+                                    top: y0 - dy + "px"
+                                });
+                            }
+                        })() : (function () {
+                            if (!current.hasClass("transition")) {
+                                current.addClass("transition");
+                                current.css({
+                                    left: x0 + "px",
+                                    top: y0 + "px"
+                                });
+                            }
+                        })();
+                });
+            });
+        } catch (window) {
+            if (window) {
+                alert(window);
+            }
+        }
+    });
+</script>
+</body>
+</html>
+
